@@ -1,0 +1,20 @@
+.body {
+  flex-grow: 1;
+  background-attachment: fixed;
+  background-image: url("../../assets/background.jpg");
+}
+
+.body .content {
+  text-align: center;
+  background-color: rgb(15, 32, 47);
+  width: var(--body-width);
+  min-height: calc(100vh);
+  margin: 0 auto;
+  z-index: 1;
+  padding: 30px;
+  text-align: left;
+}
+
+h1 {
+  margin: 0;
+}
