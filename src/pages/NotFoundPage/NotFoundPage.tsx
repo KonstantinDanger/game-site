@@ -1,3 +1,20 @@
+import { Box, Button, Flex } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+
 export default function NotFoundPage() {
-  return <h1>404 Page not found.</h1>;
+  return (
+    <Box>
+      <h1>Page Not Found 404</h1>
+
+      <Flex gap='24px' mt='100px'>
+        <Button as={Link} to={`/`}>
+          Main Page
+        </Button>
+
+        <Button as={Link} to={`/sign_in`}>
+          Login
+        </Button>
+      </Flex>
+    </Box>
+  );
 }
