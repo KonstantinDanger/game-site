@@ -1,33 +1,36 @@
-import HomePage from "../../pages/MainPage/MainPage";
-import NotFoundPage from "../../pages/NotFoundPage/NotFoundPage";
-import LeaderBoardPage from "../../pages/LeaderBoardPage/LeaderBoardPage";
-import PlayerStatsPage from "../../pages/PlayerStatsPage/PlayerStatsPage";
-import RegisterPage from "../../pages/RegisterPage/RegisterPage";
-import LoginPage from "../../pages/LoginPage/LoginPage";
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { Box, useColorModeValue } from '@chakra-ui/react';
 
-import css from "./Body.module.css";
+import HomePage from 'pages/HomePage/HomePage';
+import NotFoundPage from 'pages/NotFoundPage/NotFoundPage';
+import PlayerPage from '@/pages/PlayerPage/PlayerPage';
+import PlayerListPage from 'pages/PlayerListPage/PlayerListPage';
+import RegisterPage from 'pages/RegisterPage/RegisterPage';
+import LoginPage from 'pages/LoginPage/LoginPage';
+import GoBackButton from 'components/GoBackButton/GoBackButton';
 
-import { Route, Routes } from "react-router-dom";
+import css from './Body.module.css';
+import UserProfilePage from '@/pages/UserProfilePage/UserProfilePage';
 
 export default function Body() {
+  const { pathname } = useLocation();
+  const bg = useColorModeValue('whiteAlpha.700', 'blackAlpha.900');
+
   return (
-    <div className={css.body}>
-      <div className={css.content}>
+    <Box className={css.body}>
+      <Box className={css.content} bgColor={bg}>
+        {pathname !== '/' && <GoBackButton />}
+
         <Routes>
-          <Route path="/" element={<HomePage />}></Route>
-
-          <Route path="/leaderboard" element={<LeaderBoardPage />}></Route>
-          <Route
-            path="/playerstats/:playerId"
-            element={<PlayerStatsPage />}
-          ></Route>
-
-          <Route path="/register" element={<RegisterPage />}></Route>
-          <Route path="/login" element={<LoginPage />}></Route>
-
-          <Route path="*" element={<NotFoundPage />}></Route>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/players' element={<PlayerListPage />} />
+          <Route path='/player/:playerId' element={<PlayerPage />} />
+          <Route path='/register' element={<RegisterPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/profile' element={<UserProfilePage />} />
+          <Route path='*' element={<NotFoundPage />} />
         </Routes>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

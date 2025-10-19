@@ -1,7 +1,7 @@
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
   height: var(--header-height);
   background: linear-gradient(90deg, #0f172a, #1e293b);
   color: #f8fafc;
@@ -9,18 +9,19 @@
   position: sticky;
   top: 0;
   width: 100%;
-  justify-content: flex-end;
 }
 
-.header button {
-  margin-right: 8px;
+.container {
+  width: var(--body-width);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  cursor: pointer;
+.buttons {
+  display: flex;
+  gap: 8px;
 }
 
 .nav {
