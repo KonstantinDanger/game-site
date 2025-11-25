@@ -1,31 +1,36 @@
-import { login, logout, refreshToken, register, updateUser } from './asyncThunks';
+import { getMe, login, logout, refreshToken, register, updateUser } from './asyncThunks';
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Status } from '@/types/reducer';
-
-type User = {
-  name: string;
-  email: string;
-};
+import type { Player } from '@/types/players';
 
 type SliceState = {
-  user: User;
+  player: Player;
   token: string;
   status: Status | 'refreshing' | 'updating';
 };
 
 type LoginPayload = {
-  user: User;
+  player: Player;
   token: string;
 };
 
+// Восстановление токена из localStorage при инициализации
+const getInitialToken = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('auth_token') || '';
+  }
+  return '';
+};
+
 const initialState: SliceState = {
-  user: {
+  player: {
+    id: '',
     name: '',
     email: '',
   },
-  token: '',
+  token: getInitialToken(),
   status: 'idle',
 };
 
@@ -39,7 +44,7 @@ const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(register.fulfilled, (state, action: PayloadAction<LoginPayload>) => {
-        state.user = action.payload.user;
+        state.player = action.payload.player;
         state.token = action.payload.token;
         state.status = 'loaded';
       })
@@ -51,7 +56,7 @@ const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<LoginPayload>) => {
-        state.user = action.payload.user;
+        state.player = action.payload.player;
         state.token = action.payload.token;
       })
 
@@ -74,12 +79,24 @@ const authSlice = createSlice({
       .addCase(updateUser.pending, state => {
         state.status = 'updating';
       })
-      .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.user = action.payload;
+      .addCase(updateUser.fulfilled, (state, action: PayloadAction<Player>) => {
+        state.player = action.payload;
         state.status = 'loaded';
       })
       .addCase(updateUser.rejected, state => {
         state.status = 'loaded';
+      })
+
+      .addCase(getMe.pending, state => {
+        state.status = 'loading';
+      })
+      .addCase(getMe.fulfilled, (state, action: PayloadAction<Player>) => {
+        state.player = action.payload;
+        state.status = 'loaded';
+      })
+      .addCase(getMe.rejected, state => {
+        state.token = '';
+        state.status = 'idle';
       });
   },
 });

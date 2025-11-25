@@ -1,8 +1,7 @@
 export type Player = {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  score: number;
 };
 
 export type PlayerListParams = {};

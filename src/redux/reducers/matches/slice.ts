@@ -1,22 +1,22 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { getPlayerById, getPlayerList } from './asyncThunks';
+import { getMatchById, getMatchList } from './asyncThunks';
 
-import type { Player } from '@/types/players';
+import type { Match } from '@/types/matches';
 import type { Status } from '@/types/reducer';
 import type { Paging } from '@/types/fields';
 import type { ChangePaging } from '@/components/Pagination/Pagination';
 
 type State = {
-  playerList: Player[];
-  player: Player | null;
+  matchList: Match[];
+  match: Match | null;
   pagination: Paging;
   status: Status;
 };
 
 export const initialState: State = {
-  playerList: [],
-  player: null,
+  matchList: [],
+  match: null,
   pagination: {
     page: 1,
     perPage: 10,
@@ -25,8 +25,8 @@ export const initialState: State = {
   status: 'idle',
 };
 
-const playersSlice = createSlice({
-  name: 'players',
+const matchesSlice = createSlice({
+  name: 'matches',
   initialState,
   reducers: {
     setPaging: (state, action: PayloadAction<ChangePaging>) => {
@@ -38,28 +38,29 @@ const playersSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(getPlayerList.pending, state => {
+      .addCase(getMatchList.pending, state => {
         state.status = 'loading';
       })
-      .addCase(getPlayerList.fulfilled, (state, action: PayloadAction<Player[]>) => {
+      .addCase(getMatchList.fulfilled, (state, action: PayloadAction<Match[]>) => {
         state.status = 'loaded';
-        state.playerList = action.payload;
+        state.matchList = action.payload;
       })
-      .addCase(getPlayerList.rejected, state => {
+      .addCase(getMatchList.rejected, state => {
         state.status = 'error';
       })
-      .addCase(getPlayerById.pending, state => {
+      .addCase(getMatchById.pending, state => {
         state.status = 'loading';
       })
-      .addCase(getPlayerById.fulfilled, (state, action: PayloadAction<Player>) => {
+      .addCase(getMatchById.fulfilled, (state, action: PayloadAction<Match>) => {
         state.status = 'loaded';
-        state.player = action.payload;
+        state.match = action.payload;
       })
-      .addCase(getPlayerById.rejected, state => {
+      .addCase(getMatchById.rejected, state => {
         state.status = 'error';
       });
   },
 });
 
-export const { setPaging } = playersSlice.actions;
-export default playersSlice.reducer;
+export const { setPaging } = matchesSlice.actions;
+export default matchesSlice.reducer;
+

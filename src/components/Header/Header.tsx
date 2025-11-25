@@ -1,8 +1,8 @@
 import { Flex } from '@chakra-ui/react';
 
-import Logo from 'components/Logo/Logo';
-import ColorModeButton from '../ColorModeButton/ColorModeButton';
-import UserProfileButton from '../UserProfileButton/UserProfileButton';
+import Logo from '@/components/Logo/Logo';
+import ColorModeButton from '@/components/ColorModeButton/ColorModeButton';
+import UserProfileButton from '@/components/UserProfileButton/UserProfileButton';
 
 import css from './Header.module.css';
 

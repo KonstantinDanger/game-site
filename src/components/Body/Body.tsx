@@ -1,16 +1,21 @@
+import { lazy, Suspense } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 
-import HomePage from 'pages/HomePage/HomePage';
-import NotFoundPage from 'pages/NotFoundPage/NotFoundPage';
-import PlayerPage from '@/pages/PlayerPage/PlayerPage';
-import PlayerListPage from 'pages/PlayerListPage/PlayerListPage';
-import RegisterPage from 'pages/RegisterPage/RegisterPage';
-import LoginPage from 'pages/LoginPage/LoginPage';
-import GoBackButton from 'components/GoBackButton/GoBackButton';
+import GoBackButton from '@/components/GoBackButton/GoBackButton';
+import Loading from '@/components/Loading/Loading';
 
 import css from './Body.module.css';
-import UserProfilePage from '@/pages/UserProfilePage/UserProfilePage';
+
+const HomePage = lazy(() => import('@/pages/HomePage/HomePage'));
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage/NotFoundPage'));
+const PlayerPage = lazy(() => import('@/pages/PlayerPage/PlayerPage'));
+const PlayerListPage = lazy(() => import('@/pages/PlayerListPage/PlayerListPage'));
+const MatchPage = lazy(() => import('@/pages/MatchPage/MatchPage'));
+const MatchListPage = lazy(() => import('@/pages/MatchListPage/MatchListPage'));
+const RegisterPage = lazy(() => import('@/pages/RegisterPage/RegisterPage'));
+const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'));
+const UserProfilePage = lazy(() => import('@/pages/UserProfilePage/UserProfilePage'));
 
 export default function Body() {
   const { pathname } = useLocation();
@@ -21,15 +26,19 @@ export default function Body() {
       <Box className={css.content} bgColor={bg}>
         {pathname !== '/' && <GoBackButton />}
 
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/players' element={<PlayerListPage />} />
-          <Route path='/player/:playerId' element={<PlayerPage />} />
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/profile' element={<UserProfilePage />} />
-          <Route path='*' element={<NotFoundPage />} />
-        </Routes>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/players' element={<PlayerListPage />} />
+            <Route path='/player/:playerId' element={<PlayerPage />} />
+            <Route path='/matches' element={<MatchListPage />} />
+            <Route path='/match/:matchId' element={<MatchPage />} />
+            <Route path='/register' element={<RegisterPage />} />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/profile' element={<UserProfilePage />} />
+            <Route path='*' element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </Box>
     </Box>
   );

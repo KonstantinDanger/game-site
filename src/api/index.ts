@@ -1,28 +1,20 @@
 import axios from 'axios';
 
+const isDev = window.location.origin.includes('localhost');
+const prefix = isDev ? 'DEV' : 'PROD';
+export const baseURL = import.meta.env[`VITE_API_ORIGIN_${prefix}`];
+
 export const headers = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
-  'X-CSRF-Token': document
-    .querySelector('meta[name="csrf-token"]')
-    ?.getAttribute('content'),
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': isDev ? 'http://localhost:3000' : '*',
 };
-
-export const baseURL = window.location.origin;
 
 const api = axios.create({
   baseURL,
   headers,
   responseType: 'json',
+  withCredentials: true,
 });
-
-export const setAuthToken = (token: string) => {
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
-export const removeAuthToken = () => {
-  axios.defaults.headers.common.Authorization = ``;
-};
 
 export default api;
