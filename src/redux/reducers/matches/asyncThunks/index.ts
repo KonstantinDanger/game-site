@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import qs from 'qs';
 
 import api from '@/api';
-import { sleep } from '@/utils';
+import { sleep, getErrorMessage } from '@/utils';
 
 export const getMatchById = createAsyncThunk(
   'matches/getMatchById',
@@ -12,8 +12,9 @@ export const getMatchById = createAsyncThunk(
       const response = await api.get(`api/match/${id}`);
       return response.data;
     } catch (error: any) {
-      toast.error(`Failed to get match. ${error.message}`);
-      throw new Error(error.message);
+      const errorMessage = getErrorMessage(error);
+      toast.error(`Match loading failed: ${errorMessage}`);
+      throw new Error(errorMessage);
     }
   },
 );
@@ -27,8 +28,9 @@ export const getMatchList = createAsyncThunk(
       const response = await api.post(`api/matches/${qs.stringify(pagination)}`);
       return response.data;
     } catch (error: any) {
-      toast.error(`Failed to get match list. ${error.message}`);
-      throw new Error(error.message);
+      const errorMessage = getErrorMessage(error);
+      toast.error(`Match list loading failed: ${errorMessage}`);
+      throw new Error(errorMessage);
     }
   },
 );

@@ -14,6 +14,11 @@ type State = {
   status: Status;
 };
 
+type GetPlayerListResponse = {
+  list: Player[];
+  total: number;
+};
+
 export const initialState: State = {
   playerList: [],
   player: null,
@@ -41,10 +46,15 @@ const playersSlice = createSlice({
       .addCase(getPlayerList.pending, state => {
         state.status = 'loading';
       })
-      .addCase(getPlayerList.fulfilled, (state, action: PayloadAction<Player[]>) => {
-        state.status = 'loaded';
-        state.playerList = action.payload;
-      })
+      .addCase(
+        getPlayerList.fulfilled,
+        (state, action: PayloadAction<GetPlayerListResponse>) => {
+          const { list, total } = action.payload;
+          state.playerList = list;
+          state.pagination.totalPages = total;
+          state.status = 'loaded';
+        },
+      )
       .addCase(getPlayerList.rejected, state => {
         state.status = 'error';
       })

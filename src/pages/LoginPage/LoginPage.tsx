@@ -1,16 +1,25 @@
+import { Link, useNavigate } from 'react-router-dom';
 import { Field, Form, Formik, type FormikHelpers } from 'formik';
 import { Button, Flex, Input, Text } from '@chakra-ui/react';
 
 import { login } from '@/redux/reducers/auth';
-import { useDispatch } from '@/redux/store';
+import { useDispatch, useSelector } from '@/redux/store';
+import { authSelector } from '@/redux/selectors';
 import type { LoginUser } from '@/types/users';
-import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { status } = useSelector(authSelector);
+  const isLoading = status === 'loading';
 
   const handleSubmit = (values: LoginUser, actions: FormikHelpers<LoginUser>) => {
-    dispatch(login({ email: values.email, password: values.password }));
+    dispatch(
+      login({
+        data: values,
+        onSuccess: () => navigate('/'),
+      }),
+    );
     actions.resetForm();
   };
 
@@ -23,7 +32,9 @@ export default function LoginPage() {
           <Flex as={Form} flexDir='column' gap='24px'>
             <Input as={Field} name='email' type='email' placeholder='Email' />
             <Input as={Field} name='password' type='password' placeholder='password' />
-            <Button type='submit'>Log In</Button>
+            <Button type='submit' isLoading={isLoading}>
+              Log In
+            </Button>
           </Flex>
         </Formik>
 
