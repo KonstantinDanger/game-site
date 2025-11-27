@@ -7,7 +7,6 @@ export const baseURL = import.meta.env[`VITE_API_ORIGIN_${prefix}`];
 export const headers = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': isDev ? 'http://localhost:3000' : '*',
 };
 
 const api = axios.create({
@@ -16,5 +15,13 @@ const api = axios.create({
   responseType: 'json',
   withCredentials: true,
 });
+
+export const setAuthToken = (token: string) => {
+  api.defaults.headers.common.Authorization = `Bearer ${token}`;
+};
+
+export const removeAuthToken = () => {
+  delete api.defaults.headers.common.Authorization;
+};
 
 export default api;

@@ -2,11 +2,14 @@ import { Field, Form, Formik, type FormikHelpers } from 'formik';
 import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import type { RegisterUser } from '@/types/users';
 import { register } from '@/redux/reducers/auth';
-import { useDispatch } from '@/redux/store';
+import { useDispatch, useSelector } from '@/redux/store';
+import { authSelector } from '@/redux/selectors';
 import { Link } from 'react-router-dom';
 
 export default function RegisterPage() {
   const dispatch = useDispatch();
+  const { status } = useSelector(authSelector);
+  const isLoading = status === 'loading';
 
   const handleSubmit = (values: RegisterUser, actions: FormikHelpers<RegisterUser>) => {
     dispatch(register(values));
@@ -26,7 +29,9 @@ export default function RegisterPage() {
             <Input as={Field} name='name' type='input' placeholder='Name' />
             <Input as={Field} name='email' type='email' placeholder='Email' />
             <Input as={Field} name='password' type='password' placeholder='Password' />
-            <Button type='submit'>Sign Up</Button>
+            <Button type='submit' isLoading={isLoading}>
+              Sign Up
+            </Button>
           </Flex>
         </Formik>
 

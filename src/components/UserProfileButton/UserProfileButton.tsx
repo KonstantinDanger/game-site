@@ -11,18 +11,19 @@ import {
 import { Link } from 'react-router-dom';
 
 export default function UserProfileButton() {
-  const { token } = useSelector(authSelector);
+  const { player } = useSelector(authSelector);
+  const hasAccess = !!player?.id;
   const color = useColorModeValue('gray.700', 'gray.300');
   return (
     <Menu>
       <MenuButton as={Avatar} size='sm' cursor='pointer' />
       <MenuList minW='100px'>
-        <MenuItem as={Link} to={token ? '/profile' : '/login'} color={color}>
-          {token ? 'My Profile' : 'Log In'}
+        <MenuItem as={Link} to={hasAccess ? '/profile' : '/login'} color={color}>
+          {hasAccess ? 'My Profile' : 'Log In'}
         </MenuItem>
 
-        <MenuItem as={Link} to={token ? '/logout' : '/register'} color={color}>
-          {token ? 'Log Out' : 'Sign Up'}
+        <MenuItem as={Link} to={hasAccess ? '/logout' : '/register'} color={color}>
+          {hasAccess ? 'Log Out' : 'Sign Up'}
         </MenuItem>
       </MenuList>
     </Menu>

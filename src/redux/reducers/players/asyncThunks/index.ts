@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import qs from 'qs';
 
 import api from '@/api';
-import { sleep } from '@/utils';
+import { sleep, getErrorMessage } from '@/utils';
 
 export const getPlayerById = createAsyncThunk(
   'players/getPlayerById',
@@ -12,8 +12,9 @@ export const getPlayerById = createAsyncThunk(
       const response = await api.get(`api/player/${id}`);
       return response.data;
     } catch (error: any) {
-      toast.error(`Failed to get profile. ${error.message}`);
-      throw new Error(error.message);
+      const errorMessage = getErrorMessage(error);
+      toast.error(`Player loading failed: ${errorMessage}`);
+      throw new Error(errorMessage);
     }
   },
 );
@@ -27,8 +28,9 @@ export const getPlayerList = createAsyncThunk(
       const response = await api.post(`api/players/${qs.stringify(pagination)}`);
       return response.data;
     } catch (error: any) {
-      toast.error(`Failed to get player list. ${error.message}`);
-      throw new Error(error.message);
+      const errorMessage = getErrorMessage(error);
+      toast.error(`Player list loading failed: ${errorMessage}`);
+      throw new Error(errorMessage);
     }
   },
 );
