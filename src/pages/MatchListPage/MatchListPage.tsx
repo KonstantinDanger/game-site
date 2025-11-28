@@ -16,7 +16,7 @@ export default function MatchListPage() {
 
   useEffect(() => {
     dispatch(getMatchList());
-  }, []);
+  }, [dispatch]);
 
   const onChangePaging = (paging: ChangePaging) => {
     dispatch(setPaging(paging));
@@ -57,4 +57,3 @@ export default function MatchListPage() {
     </Flex>
   );
 }
-
