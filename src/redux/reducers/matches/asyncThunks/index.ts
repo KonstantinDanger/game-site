@@ -10,7 +10,7 @@ export const getMatchById = createAsyncThunk(
   async (id: string) => {
     try {
       const response = await api.get(`api/match/${id}`);
-      return response.data;
+      return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
       toast.error(`Match loading failed: ${errorMessage}`);
@@ -25,8 +25,8 @@ export const getMatchList = createAsyncThunk(
     try {
       const { pagination } = getState().matches;
       await sleep(1000); // imitate min query time
-      const response = await api.post(`api/matches/${qs.stringify(pagination)}`);
-      return response.data;
+      const response = await api.get(`api/matches?${qs.stringify(pagination)}`);
+      return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
       toast.error(`Match list loading failed: ${errorMessage}`);

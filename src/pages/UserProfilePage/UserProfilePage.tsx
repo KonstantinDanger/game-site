@@ -12,12 +12,24 @@ export default function UserProfilePage() {
   const isLoading = status === 'loading';
 
   const handleSubmit = (values: RegisterUser, actions: FormikHelpers<RegisterUser>) => {
-    dispatch(updateUser({ data: values }));
-    actions.resetForm();
+    console.log('==============================values', values);
+    dispatch(
+      updateUser({
+        data: values,
+        onSuccess: data =>
+          actions.resetForm({
+            values: {
+              name: data.name,
+              email: data.email,
+              password: '',
+            },
+          }),
+      }),
+    );
   };
 
   return (
-    <Flex flexDir='column' gap='24px'>
+    <Flex alignItems='center' flexDir='column' gap='24px'>
       <h1>My Profile</h1>
 
       <Formik
@@ -28,12 +40,12 @@ export default function UserProfilePage() {
         }}
         onSubmit={handleSubmit}
       >
-        {({ touched }) => (
+        {({ dirty }) => (
           <Flex as={Form} flexDir='column' gap='24px' w='320px'>
             <Input as={Field} name='name' type='input' placeholder='Name' />
             <Input as={Field} name='email' type='email' placeholder='Email' />
             <Input as={Field} name='password' type='password' placeholder='Password' />
-            <Button type='submit' isLoading={isLoading} isDisabled={!touched}>
+            <Button type='submit' isLoading={isLoading} isDisabled={!dirty}>
               Update Profile
             </Button>
           </Flex>

@@ -4,6 +4,6 @@ type ExcludeZero<T extends number> = T extends 0 ? never : T;
 export type NonZeroNumber = ExcludeZero<number>;
 
 export type ThunkArgs = {
-  onSuccess?: () => void;
-  onError?: () => void;
+  onSuccess?: (data?: any) => void;
+  onError?: (data?: any) => void;
 };

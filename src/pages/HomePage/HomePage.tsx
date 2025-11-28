@@ -19,6 +19,10 @@ export default function HomePage() {
       <Button as={Link} to='/players' w='200px'>
         Player List
       </Button>
+
+      <Button as={Link} to='/matches' w='200px'>
+        Match List
+      </Button>
     </Flex>
   );
 }

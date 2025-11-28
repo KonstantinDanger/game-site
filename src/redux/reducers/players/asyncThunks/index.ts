@@ -10,7 +10,7 @@ export const getPlayerById = createAsyncThunk(
   async (id: string) => {
     try {
       const response = await api.get(`api/player/${id}`);
-      return response.data;
+      return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
       toast.error(`Player loading failed: ${errorMessage}`);
@@ -25,8 +25,8 @@ export const getPlayerList = createAsyncThunk(
     try {
       const { pagination } = getState().players;
       await sleep(1000); // imitate min query time
-      const response = await api.post(`api/players/${qs.stringify(pagination)}`);
-      return response.data;
+      const response = await api.get(`api/players?${qs.stringify(pagination)}`);
+      return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
       toast.error(`Player list loading failed: ${errorMessage}`);

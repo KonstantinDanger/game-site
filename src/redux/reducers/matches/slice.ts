@@ -14,11 +14,6 @@ type State = {
   status: Status;
 };
 
-type GetMatchListResponse = {
-  list: Match[];
-  total: number;
-};
-
 export const initialState: State = {
   matchList: [],
   match: null,
@@ -48,10 +43,10 @@ const matchesSlice = createSlice({
       })
       .addCase(
         getMatchList.fulfilled,
-        (state, action: PayloadAction<GetMatchListResponse>) => {
-          const { list, total } = action.payload;
+        (state, action: PayloadAction<{ list: Match[]; totalPages: number }>) => {
+          const { list, totalPages } = action.payload;
           state.matchList = list;
-          state.pagination.totalPages = total;
+          state.pagination.totalPages = totalPages;
           state.status = 'loaded';
         },
       )

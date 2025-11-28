@@ -7,17 +7,22 @@ import { getErrorMessage } from '@/utils';
 import type { LoginUser, RegisterUser, UpdateUser } from '@/types/users';
 import type { ThunkArgs } from '@/types/reducer';
 
-export const logout = createAsyncThunk('/auth/logout', async () => {
-  try {
-    await api.post('api/auth/logout');
-    removeAuthToken();
-  } catch (error: any) {
-    const errorMessage = getErrorMessage(error);
-    toast.error(`Logout failed: ${errorMessage}`);
-    removeAuthToken(); // Удаляем токен даже при ошибке
-    throw new Error(errorMessage);
-  }
-});
+export const logout = createAsyncThunk(
+  '/auth/logout',
+  async ({ onSuccess, onError }: ThunkArgs) => {
+    try {
+      await api.post('api/auth/logout');
+      removeAuthToken();
+      onSuccess?.();
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(`Logout failed: ${errorMessage}`);
+      removeAuthToken();
+      onError?.();
+      throw new Error(errorMessage);
+    }
+  },
+);
 
 export const login = createAsyncThunk(
   'auth/login',
@@ -58,22 +63,21 @@ export const refreshToken = createAsyncThunk('auth/refreshToken', async () => {
   }
 });
 
-export const register = createAsyncThunk('auth/register', async (data: RegisterUser) => {
-  try {
-    const response = await api.post('api/auth/register', data);
-
-    const accessToken = response.data.data?.accessToken;
-    if (accessToken) {
-      setAuthToken(accessToken);
+export const register = createAsyncThunk(
+  'auth/register',
+  async ({ data, onSuccess, onError }: { data: RegisterUser } & ThunkArgs) => {
+    try {
+      const response = await api.post('api/auth/register', data);
+      onSuccess?.(response.data.data);
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(`Registration failed: ${errorMessage}`);
+      onError?.();
+      throw new Error(errorMessage);
     }
-
-    return response.data.data;
-  } catch (error: any) {
-    const errorMessage = getErrorMessage(error);
-    toast.error(`Registration failed: ${errorMessage}`);
-    throw new Error(errorMessage);
-  }
-});
+  },
+);
 
 export const updateUser = createAsyncThunk(
   'auth/updateUser',
@@ -85,10 +89,10 @@ export const updateUser = createAsyncThunk(
     try {
       const body: UpdateUser = { ...data };
       if (password) body.password = password;
-      const response = await api.put(`api/auth/player`, data);
-      onSuccess?.();
+      const response = await api.put(`api/auth/player`, body);
+      onSuccess?.(response.data.data);
       toast.success('Profile updated successfully');
-      return response.data;
+      return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
       toast.error(`Profile update failed: ${errorMessage}`);
@@ -101,6 +105,10 @@ export const updateUser = createAsyncThunk(
 export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async () => {
   try {
     const response = await api.get('api/auth/current-user');
+    const accessToken = response.data?.accessToken;
+    if (accessToken) {
+      setAuthToken(accessToken);
+    }
     return response.data.data;
   } catch (error: any) {
     const errorMessage = getErrorMessage(error);
