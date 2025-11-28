@@ -17,7 +17,9 @@ export default function LoginPage() {
     dispatch(
       login({
         data: values,
-        onSuccess: () => navigate('/'),
+        onSuccess: () => {
+          navigate('/');
+        },
       }),
     );
     actions.resetForm();

@@ -14,11 +14,6 @@ type State = {
   status: Status;
 };
 
-type GetPlayerListResponse = {
-  list: Player[];
-  total: number;
-};
-
 export const initialState: State = {
   playerList: [],
   player: null,
@@ -48,10 +43,10 @@ const playersSlice = createSlice({
       })
       .addCase(
         getPlayerList.fulfilled,
-        (state, action: PayloadAction<GetPlayerListResponse>) => {
-          const { list, total } = action.payload;
+        (state, action: PayloadAction<{ list: Player[]; totalPages: number }>) => {
+          const { list, totalPages } = action.payload;
           state.playerList = list;
-          state.pagination.totalPages = total;
+          state.pagination.totalPages = totalPages;
           state.status = 'loaded';
         },
       )

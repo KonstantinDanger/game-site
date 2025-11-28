@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+import { resetAuth } from '@/redux/reducers/auth';
+import { store } from '@/redux/store';
+
 const isDev = window.location.origin.includes('localhost');
 const prefix = isDev ? 'DEV' : 'PROD';
 export const baseURL = import.meta.env[`VITE_API_ORIGIN_${prefix}`];
@@ -23,5 +26,17 @@ export const setAuthToken = (token: string) => {
 export const removeAuthToken = () => {
   delete api.defaults.headers.common.Authorization;
 };
+
+axios.interceptors.response.use(
+  res => res,
+  err => {
+    console.log(err.response.status);
+    if (err.response.status === 401) {
+      removeAuthToken();
+      store.dispatch(resetAuth());
+    }
+    return Promise.reject(err);
+  },
+);
 
 export default api;
