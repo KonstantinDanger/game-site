@@ -1,2 +1,2 @@
 export type SelectOption = { label: any; value: string | number };
-export type Paging = { page: number; perPage: number; totalPages: number };
+export type Paging = { page: number; perPage: number; totalCount: number };

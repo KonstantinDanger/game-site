@@ -20,7 +20,7 @@ export const initialState: State = {
   pagination: {
     page: 1,
     perPage: 10,
-    totalPages: 1,
+    totalCount: 1,
   },
   status: 'idle',
 };
@@ -43,10 +43,10 @@ const playersSlice = createSlice({
       })
       .addCase(
         getPlayerList.fulfilled,
-        (state, action: PayloadAction<{ list: Player[]; totalPages: number }>) => {
-          const { list, totalPages } = action.payload;
+        (state, action: PayloadAction<{ list: Player[]; totalCount: number }>) => {
+          const { list, totalCount } = action.payload;
           state.playerList = list;
-          state.pagination.totalPages = totalPages;
+          state.pagination.totalCount = totalCount;
           state.status = 'loaded';
         },
       )

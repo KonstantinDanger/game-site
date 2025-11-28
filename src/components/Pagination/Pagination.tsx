@@ -4,10 +4,10 @@ import RCPagination from 'rc-pagination';
 
 import PageSizeSelect from './PageSizeSelect';
 import type { Paging } from '@/types/fields';
-import './Pagination.module.scss';
 import { sleep } from '@/utils';
+import './Pagination.scss';
 
-export type ChangePaging = Partial<Omit<Paging, 'totalPages'>>;
+export type ChangePaging = Partial<Omit<Paging, 'totalCount'>>;
 
 type Props = {
   paging: Paging;
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export default function Pagination({
-  paging: { page = 1, perPage = 10, totalPages = 0 },
+  paging: { page = 1, perPage = 10, totalCount = 1 },
   onChange,
   disabled = false,
 }: Props) {
@@ -52,7 +52,7 @@ export default function Pagination({
       <PageSizeSelect onChange={handlePageSizeChange} value={perPage} />
 
       <RCPagination
-        total={perPage * totalPages}
+        total={totalCount}
         pageSize={perPage}
         current={page}
         showQuickJumper

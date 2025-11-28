@@ -17,6 +17,13 @@
   text-align: left;
 }
 
+@media (max-width: 768px) {
+  .body .content {
+    width: 100%;
+    padding: 15px;
+  }
+}
+
 h1 {
   margin: 0;
 }

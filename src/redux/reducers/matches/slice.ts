@@ -20,7 +20,7 @@ export const initialState: State = {
   pagination: {
     page: 1,
     perPage: 10,
-    totalPages: 1,
+    totalCount: 1,
   },
   status: 'idle',
 };
@@ -43,10 +43,10 @@ const matchesSlice = createSlice({
       })
       .addCase(
         getMatchList.fulfilled,
-        (state, action: PayloadAction<{ list: Match[]; totalPages: number }>) => {
-          const { list, totalPages } = action.payload;
+        (state, action: PayloadAction<{ list: Match[]; totalCount: number }>) => {
+          const { list, totalCount } = action.payload;
           state.matchList = list;
-          state.pagination.totalPages = totalPages;
+          state.pagination.totalCount = totalCount;
           state.status = 'loaded';
         },
       )

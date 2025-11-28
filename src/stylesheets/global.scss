@@ -1,0 +1,11 @@
+:root {
+  --bg_primary_color: #393d7e;
+  --primary_color: #5459ac;
+  --border_primary_color: #5459ac;
+}
+
+html[data-theme='dark'] {
+  --bg_primary_color: #1e293b;
+  --primary_color: #38bdf8;
+  --border_primary_color: #38bdf8;
+}
