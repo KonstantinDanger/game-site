@@ -1,11 +1,23 @@
-import Error from '@/components/Error/Error';
-import Loading from '@/components/Loading/Loading';
-import { playersSelector } from '@/redux/selectors';
-import { useSelector } from '@/redux/store';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Flex, Text } from '@chakra-ui/react';
 
+import Error from '@/components/Error/Error';
+import Loading from '@/components/Loading/Loading';
+import { getPlayerById } from '@/redux/reducers/players';
+import { playersSelector } from '@/redux/selectors';
+import { useDispatch, useSelector } from '@/redux/store';
+
 export default function PlayerPage() {
+  const dispatch = useDispatch();
+  const { playerId } = useParams<{ playerId: string }>();
   const { status, player } = useSelector(playersSelector);
+
+  useEffect(() => {
+    if (playerId) {
+      dispatch(getPlayerById(playerId));
+    }
+  }, [dispatch, playerId]);
 
   return (
     <Box>

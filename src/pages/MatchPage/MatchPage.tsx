@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Box, Flex, Text } from '@chakra-ui/react';
+
 import Error from '@/components/Error/Error';
 import Loading from '@/components/Loading/Loading';
+import { getMatchById } from '@/redux/reducers/matches';
 import { matchesSelector } from '@/redux/selectors';
 import { useDispatch, useSelector } from '@/redux/store';
-import { getMatchById } from '@/redux/reducers/matches';
-import { Box, Flex, Text } from '@chakra-ui/react';
 
 export default function MatchPage() {
   const dispatch = useDispatch();

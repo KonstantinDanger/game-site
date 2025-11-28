@@ -12,10 +12,6 @@ export default function UserProfilePage() {
   const isLoading = status === 'loading';
 
   const handleSubmit = (values: RegisterUser, actions: FormikHelpers<RegisterUser>) => {
-<<<<<<< HEAD
-    console.log('==============================values', values);
-=======
->>>>>>> fa4cd58 (TS linter errors fix)
     dispatch(
       updateUser({
         data: values,
