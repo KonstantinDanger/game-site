@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, position } from '@chakra-ui/react';
 import { Toaster } from 'react-hot-toast';
 
 import Header from '@/components/Header/Header';
@@ -19,7 +19,7 @@ function App() {
   return (
     <ChakraProvider>
       <ColorModeScript initialColorMode='system' />
-      <Toaster position='top-right' />
+      <Toaster position='bottom-center' />
       <Header />
       <Body />
       <Footer />

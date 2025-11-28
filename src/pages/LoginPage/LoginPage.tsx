@@ -6,6 +6,7 @@ import { login } from '@/redux/reducers/auth';
 import { useDispatch, useSelector } from '@/redux/store';
 import { authSelector } from '@/redux/selectors';
 import type { LoginUser } from '@/types/users';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -19,6 +20,10 @@ export default function LoginPage() {
         data: values,
         onSuccess: () => {
           navigate('/');
+          toast.success('Successfuly logged in');
+        },
+        onError: () => {
+          toast.error('Something went wrong. Refresh the and try again');
         },
       }),
     );

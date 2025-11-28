@@ -5,6 +5,7 @@ import type { RegisterUser } from '@/types/users';
 import { register } from '@/redux/reducers/auth';
 import { useDispatch, useSelector } from '@/redux/store';
 import { authSelector } from '@/redux/selectors';
+import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
   const dispatch = useDispatch();
@@ -13,7 +14,18 @@ export default function RegisterPage() {
   const isLoading = status === 'loading';
 
   const handleSubmit = (values: RegisterUser) => {
-    dispatch(register({ data: values, onSuccess: () => navigate('/') }));
+    dispatch(
+      register({
+        data: values,
+        onSuccess: () => {
+          navigate('/');
+          toast.success('Registration was successful');
+        },
+        onError: () => {
+          toast.error('Something went wrong. Refresh page and try again');
+        },
+      }),
+    );
   };
 
   return (
