@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Field, Form, Formik, type FormikHelpers } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import type { RegisterUser } from '@/types/users';
 import { register } from '@/redux/reducers/auth';
@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const { status } = useSelector(authSelector);
   const isLoading = status === 'loading';
 
-  const handleSubmit = (values: RegisterUser, actions: FormikHelpers<RegisterUser>) => {
+  const handleSubmit = (values: RegisterUser) => {
     dispatch(register({ data: values, onSuccess: () => navigate('/') }));
   };
 

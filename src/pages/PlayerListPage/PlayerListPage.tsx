@@ -16,7 +16,7 @@ export default function PlayerListPage() {
 
   useEffect(() => {
     dispatch(getPlayerList());
-  }, []);
+  }, [dispatch]);
 
   const onChangePaging = (paging: ChangePaging) => {
     dispatch(setPaging(paging));

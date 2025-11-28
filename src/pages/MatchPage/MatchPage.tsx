@@ -11,13 +11,16 @@ export default function MatchPage() {
   const dispatch = useDispatch();
   const { matchId } = useParams<{ matchId: string }>();
   const { status, match } = useSelector(matchesSelector);
-  const { matchDate, matchTime } = match || {};
 
   useEffect(() => {
     if (matchId) {
       dispatch(getMatchById(matchId));
     }
   }, [dispatch, matchId]);
+
+  if (!match) return <Error />;
+
+  const { matchDate, matchTime } = match;
 
   return (
     <Box>
@@ -37,7 +40,7 @@ export default function MatchPage() {
 
             <Flex>
               <Text fontWeight='600'>Match Time:</Text>
-              <Text>{matchTime}</Text>
+              <Text>{new Date(matchTime * 1000).toISOString().slice(11, 19)}</Text>
             </Flex>
           </Flex>
         )
@@ -45,4 +48,3 @@ export default function MatchPage() {
     </Box>
   );
 }
-

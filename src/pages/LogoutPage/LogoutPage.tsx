@@ -11,11 +11,11 @@ export default function LogoutPage() {
   useEffect(() => {
     dispatch(
       logout({
-        onSuccess: () => navigate(-1),
+        onSuccess: () => navigate('/login', { replace: true }),
         onError: () => navigate(-1),
       }),
     );
-  }, []);
+  }, [dispatch, navigate]);
 
   return <Loading />;
 }

@@ -1,8 +1,5 @@
 export type Match = {
   id: string;
   matchTime: number;
-  matchDate: number;
+  matchDate: Date;
 };
-
-export type MatchListParams = {};
-
