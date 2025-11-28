@@ -9,7 +9,7 @@ export const getPlayerById = createAsyncThunk(
   'players/getPlayerById',
   async (id: string) => {
     try {
-      const response = await api.get(`api/player/${id}`);
+      const response = await api.get(`api/players/${id}`);
       return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);

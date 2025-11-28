@@ -35,9 +35,9 @@ export default function Body() {
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/players' element={<PlayerListPage />} />
-            <Route path='/player/:playerId' element={<PlayerPage />} />
+            <Route path='/players/:playerId' element={<PlayerPage />} />
             <Route path='/matches' element={<MatchListPage />} />
-            <Route path='/match/:matchId' element={<MatchPage />} />
+            <Route path='/matches/:matchId' element={<MatchPage />} />
             <Route path='/register' element={<RegisterPage />} />
             <Route path='/login' element={<LoginPage />} />
             {hasUser && <Route path='/logout' element={<LogoutPage />} />}

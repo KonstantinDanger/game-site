@@ -1,5 +1,15 @@
 import { useEffect } from 'react';
-import { Flex, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Flex,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useColorModeValue,
+} from '@chakra-ui/react';
 
 import type { Match } from '@/types/matches';
 import { matchesSelector } from '@/redux/selectors';
@@ -9,10 +19,14 @@ import Pagination from '@/components/Pagination/Pagination';
 import type { ChangePaging } from '@/components/Pagination/Pagination';
 import Error from '@/components/Error/Error';
 import Loading from '@/components/Loading/Loading';
+import { secondsToTime } from '@/utils';
 
 export default function MatchListPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { status, matchList, pagination } = useSelector(matchesSelector);
+  const hoverBg = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
+  const selectedBg = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
 
   useEffect(() => {
     dispatch(getMatchList());
@@ -20,6 +34,7 @@ export default function MatchListPage() {
 
   const onChangePaging = (paging: ChangePaging) => {
     dispatch(setPaging(paging));
+    dispatch(getMatchList());
   };
 
   return (
@@ -43,9 +58,15 @@ export default function MatchListPage() {
             {matchList.map((el: Match) => {
               const { id, matchDate, matchTime } = el;
               return (
-                <Tr key={id}>
+                <Tr
+                  key={id}
+                  onClick={() => navigate(id)}
+                  cursor='pointer'
+                  _hover={{ bg: hoverBg }}
+                  _selected={{ bg: selectedBg }}
+                >
                   <Td>{new Date(matchDate).toLocaleDateString()}</Td>
-                  <Td>{matchTime}</Td>
+                  <Td>{secondsToTime(matchTime)}</Td>
                 </Tr>
               );
             })}

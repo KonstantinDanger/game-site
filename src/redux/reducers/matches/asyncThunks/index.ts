@@ -9,7 +9,7 @@ export const getMatchById = createAsyncThunk(
   'matches/getMatchById',
   async (id: string) => {
     try {
-      const response = await api.get(`api/match/${id}`);
+      const response = await api.get(`api/matches/${id}`);
       return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);

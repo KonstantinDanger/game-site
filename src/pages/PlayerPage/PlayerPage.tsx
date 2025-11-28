@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 
 import Error from '@/components/Error/Error';
 import Loading from '@/components/Loading/Loading';
@@ -20,7 +20,7 @@ export default function PlayerPage() {
   }, [dispatch, playerId]);
 
   return (
-    <Box>
+    <Flex flexDir='column' gap='24px'>
       <h1>Player Info</h1>
 
       {['idle', 'loading'].includes(status) ? (
@@ -30,18 +30,18 @@ export default function PlayerPage() {
       ) : (
         player && (
           <Flex flexDir='column' gap='24px'>
-            <Flex>
+            <Flex gap='8px'>
               <Text fontWeight='600'>Name:</Text>
               <Text>{player.name}</Text>
             </Flex>
 
-            <Flex>
+            <Flex gap='8px'>
               <Text fontWeight='600'>Email:</Text>
               <Text>{player.email}</Text>
             </Flex>
           </Flex>
         )
       )}
-    </Box>
+    </Flex>
   );
 }

@@ -1,5 +1,15 @@
 import { useEffect } from 'react';
-import { Flex, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Flex,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useColorModeValue,
+} from '@chakra-ui/react';
 
 import type { Player } from '@/types/players';
 import { playersSelector } from '@/redux/selectors';
@@ -12,7 +22,10 @@ import Loading from '@/components/Loading/Loading';
 
 export default function PlayerListPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { status, playerList, pagination } = useSelector(playersSelector);
+  const hoverBg = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
+  const selectedBg = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
 
   useEffect(() => {
     dispatch(getPlayerList());
@@ -20,6 +33,7 @@ export default function PlayerListPage() {
 
   const onChangePaging = (paging: ChangePaging) => {
     dispatch(setPaging(paging));
+    dispatch(getPlayerList());
   };
 
   return (
@@ -36,18 +50,22 @@ export default function PlayerListPage() {
             <Tr>
               <Th>Name</Th>
               <Th>Email</Th>
-              <Th>Score</Th>
             </Tr>
           </Thead>
 
           <Tbody>
             {playerList.map((el: Player) => {
-              const { name, email, score } = el;
+              const { name, email, id } = el;
               return (
-                <Tr>
+                <Tr
+                  key={id}
+                  onClick={() => navigate(id)}
+                  cursor='pointer'
+                  _hover={{ bg: hoverBg }}
+                  _selected={{ bg: selectedBg }}
+                >
                   <Td>{name}</Td>
                   <Td>{email}</Td>
-                  <Td>{score}</Td>
                 </Tr>
               );
             })}
