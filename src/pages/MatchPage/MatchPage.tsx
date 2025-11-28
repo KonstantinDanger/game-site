@@ -18,10 +18,6 @@ export default function MatchPage() {
     }
   }, [dispatch, matchId]);
 
-  if (!match) return <Error />;
-
-  const { matchDate, matchTime } = match;
-
   return (
     <Box>
       <h1>Match Info</h1>
@@ -35,12 +31,12 @@ export default function MatchPage() {
           <Flex flexDir='column' gap='24px'>
             <Flex>
               <Text fontWeight='600'>Match Date:</Text>
-              <Text>{new Date(matchDate).toLocaleDateString()}</Text>
+              <Text>{new Date(match.matchDate).toLocaleDateString()}</Text>
             </Flex>
 
             <Flex>
               <Text fontWeight='600'>Match Time:</Text>
-              <Text>{new Date(matchTime * 1000).toISOString().slice(11, 19)}</Text>
+              <Text>{new Date(match.matchTime * 1000).toISOString().slice(11, 19)}</Text>
             </Flex>
           </Flex>
         )

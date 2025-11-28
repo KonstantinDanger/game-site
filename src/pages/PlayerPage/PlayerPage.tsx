@@ -6,7 +6,6 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 
 export default function PlayerPage() {
   const { status, player } = useSelector(playersSelector);
-  const { name, email, score } = player || {};
 
   return (
     <Box>
@@ -21,17 +20,12 @@ export default function PlayerPage() {
           <Flex flexDir='column' gap='24px'>
             <Flex>
               <Text fontWeight='600'>Name:</Text>
-              <Text>{name}</Text>
+              <Text>{player.name}</Text>
             </Flex>
 
             <Flex>
               <Text fontWeight='600'>Email:</Text>
-              <Text>{email}</Text>
-            </Flex>
-
-            <Flex>
-              <Text fontWeight='600'>Score:</Text>
-              <Text>{score}</Text>
+              <Text>{player.email}</Text>
             </Flex>
           </Flex>
         )
