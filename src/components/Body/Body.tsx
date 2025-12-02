@@ -23,7 +23,7 @@ const UserProfilePage = lazy(() => import('@/pages/UserProfilePage/UserProfilePa
 export default function Body() {
   const { pathname } = useLocation();
   const { player } = useSelector(authSelector);
-  const bg = useColorModeValue('whiteAlpha.700', 'blackAlpha.900');
+  const bg = useColorModeValue('whiteAlpha.800', 'blackAlpha.900');
   const hasUser = !!player?.id;
 
   return (
