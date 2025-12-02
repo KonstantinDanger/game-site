@@ -34,14 +34,23 @@ export default function Body() {
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path='/' element={<HomePage />} />
+
             <Route path='/players' element={<PlayerListPage />} />
+
             <Route path='/players/:playerId' element={<PlayerPage />} />
+
             <Route path='/matches' element={<MatchListPage />} />
+
             <Route path='/matches/:matchId' element={<MatchPage />} />
+
             <Route path='/register' element={<RegisterPage />} />
+
             <Route path='/login' element={<LoginPage />} />
+
             {hasUser && <Route path='/logout' element={<LogoutPage />} />}
+
             {hasUser && <Route path='/profile' element={<UserProfilePage />} />}
+
             <Route path='*' element={<NotFoundPage />} />
           </Routes>
         </Suspense>

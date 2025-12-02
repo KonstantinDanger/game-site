@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Flex, Text } from '@chakra-ui/react';
+import { Link, useParams } from 'react-router-dom';
+import { Button, Flex, Text } from '@chakra-ui/react';
 
 import Error from '@/components/Error/Error';
 import Loading from '@/components/Loading/Loading';
@@ -40,6 +40,29 @@ export default function MatchPage() {
               <Text fontWeight='600'>Match Time:</Text>
               <Text>{secondsToTime(match.matchTime)}</Text>
             </Flex>
+
+            {match.winner && (
+              <Flex gap='8px'>
+                <Text fontWeight='600'>Winner:</Text>
+                <Button
+                  as={Link}
+                  to={`/players/${match.winner.id}`}
+                  variant='link'
+                  colorScheme='green'
+                >
+                  {match.winner.name}
+                </Button>
+              </Flex>
+            )}
+
+            {match.loser && (
+              <Flex gap='8px'>
+                <Text fontWeight='600'>Loser:</Text>
+                <Button as={Link} to={`/players/${match.loser.id}`} variant='link'>
+                  {match.loser.name}
+                </Button>
+              </Flex>
+            )}
           </Flex>
         )
       )}
