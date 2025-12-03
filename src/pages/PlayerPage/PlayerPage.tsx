@@ -49,24 +49,23 @@ export default function PlayerPage() {
         player && (
           <Flex flexDir='column' gap='24px'>
             <Flex gap='8px'>
-              <Text fontWeight='600'>Hello, {player.name}!</Text>
+              <Text fontWeight='600'>{player.name}</Text>
             </Flex>
 
             <Flex gap='8px'>
-              <Text fontWeight='600'>Total Match Time:</Text>
+              <Text fontWeight='600'>Total playtime:</Text>
               <Text>{secondsToTime(totalTime)}</Text>
             </Flex>
 
-            {matches.length > 0 && (
+            {matches.length > 0 ? (
               <Flex flexDir='column' gap='16px'>
                 <Text fontWeight='600' fontSize='lg'>
-                  Played Matches
+                  Played Matches:
                 </Text>
 
                 <Table w='100%'>
                   <Thead>
                     <Tr>
-                      <Th>Match Name</Th>
                       <Th>Match Date</Th>
                       <Th>Match Time</Th>
                     </Tr>
@@ -74,7 +73,7 @@ export default function PlayerPage() {
 
                   <Tbody>
                     {matches.map((match: Match) => {
-                      const { id, name, matchDate, matchTime } = match;
+                      const { id, matchDate, matchTime } = match;
                       return (
                         <Tr
                           key={id}
@@ -83,8 +82,6 @@ export default function PlayerPage() {
                           _hover={{ bg: hoverBg }}
                           _selected={{ bg: selectedBg }}
                         >
-                          <Td>{name}</Td>
-
                           <Td>{new Date(matchDate).toLocaleDateString()}</Td>
 
                           <Td>{secondsToTime(matchTime)}</Td>
@@ -94,7 +91,7 @@ export default function PlayerPage() {
                   </Tbody>
                 </Table>
               </Flex>
-            )}
+            ) : <div>No played matches yet...</div>}
           </Flex>
         )
       )}

@@ -13,7 +13,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+// import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 import type { Player } from '@/types/players';
 import { playersSelector, authSelector } from '@/redux/selectors';

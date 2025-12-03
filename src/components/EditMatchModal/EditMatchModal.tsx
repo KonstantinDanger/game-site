@@ -11,7 +11,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from '@/redux/store';
-import { updateMatch, getMatchList } from '@/redux/reducers/matches';
+import { getMatchList } from '@/redux/reducers/matches';
 import type { Match } from '@/types/matches';
 import { matchesSelector } from '@/redux/selectors';
 
@@ -31,14 +31,14 @@ export default function EditMatchModal({
   const { status } = useSelector(matchesSelector);
 
   useEffect(() => {
-    if (isOpen) setName(match?.name || '');
+    // if (isOpen) setName(match?.name || '');
   }, [match, isOpen]);
 
   if (!match) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await dispatch(updateMatch({ id: match.id, data: { name } }));
+    // await dispatch(updateMatch({ id: match.id, data: { name } }));
     dispatch(getMatchList());
     onClose();
   };

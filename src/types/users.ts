@@ -6,6 +6,7 @@ export type User = {
 
 export type Password = {
   password: string;
+  repeatedPwd: string;
 };
 
 export type RegisterUser = Omit<User, 'id'> & Password;

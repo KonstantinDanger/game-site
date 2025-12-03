@@ -3,8 +3,7 @@ import toast from 'react-hot-toast';
 import qs from 'qs';
 
 import api from '@/api';
-import { sleep, getErrorMessage } from '@/utils';
-import type { MatchUpdateData } from '@/types/matches';
+import { getErrorMessage } from '@/utils';
 
 export const getMatchById = createAsyncThunk(
   'matches/getMatchById',
@@ -25,27 +24,16 @@ export const getMatchList = createAsyncThunk(
   async (_, { getState }: any) => {
     try {
       const { pagination } = getState().matches;
-      await sleep(1000); // imitate min query time
       const response = await api.get(`api/matches?${qs.stringify(pagination)}`);
+      
+      console.log('==============================');
+      console.log('response.data.data', response.data.data);
+      console.log('==============================');
+
       return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
       toast.error(`Match list loading failed: ${errorMessage}`);
-      throw new Error(errorMessage);
-    }
-  },
-);
-
-export const updateMatch = createAsyncThunk(
-  'matches/updateMatch',
-  async ({ id, data }: { id: string; data: MatchUpdateData }) => {
-    try {
-      const response = await api.patch(`api/matches/${id}`, data);
-      toast.success('Match updated successfully');
-      return response.data.data;
-    } catch (error: any) {
-      const errorMessage = getErrorMessage(error);
-      toast.error(`Match update failed: ${errorMessage}`);
       throw new Error(errorMessage);
     }
   },
