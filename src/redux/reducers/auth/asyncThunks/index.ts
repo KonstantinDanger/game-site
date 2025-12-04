@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import api, { removeAuthToken, setAuthToken } from '@/api';
+import api, { removeAuthToken, setAuthToken, setRefreshToken, setSessionId } from '@/api';
 import toast from 'react-hot-toast';
 
 import { getErrorMessage } from '@/utils';
@@ -31,8 +31,17 @@ export const login = createAsyncThunk(
       const response = await api.post('api/auth/login', data);
 
       const accessToken = response.data.data?.accessToken;
+      const refreshToken = response.data.data?.refreshToken;
+      const sessionId = response.data.data?.sessionId;
+
       if (accessToken) {
         setAuthToken(accessToken);
+      }
+      if (refreshToken) {
+        setRefreshToken(refreshToken);
+      }
+      if (sessionId) {
+        setSessionId(sessionId);
       }
 
       onSuccess?.();
@@ -51,8 +60,17 @@ export const refreshToken = createAsyncThunk('auth/refreshToken', async () => {
     const response = await api.post('api/auth/refresh');
 
     const accessToken = response.data.data?.accessToken;
+    const refreshToken = response.data.data?.refreshToken;
+    const sessionId = response.data.data?.sessionId;
+
     if (accessToken) {
       setAuthToken(accessToken);
+    }
+    if (refreshToken) {
+      setRefreshToken(refreshToken);
+    }
+    if (sessionId) {
+      setSessionId(sessionId);
     }
 
     return response.data;
@@ -68,6 +86,21 @@ export const register = createAsyncThunk(
   async ({ data, onSuccess, onError }: { data: RegisterUser } & ThunkArgs) => {
     try {
       const response = await api.post('api/auth/register', data);
+
+      const accessToken = response.data.data?.accessToken;
+      const refreshToken = response.data.data?.refreshToken;
+      const sessionId = response.data.data?.sessionId;
+
+      if (accessToken) {
+        setAuthToken(accessToken);
+      }
+      if (refreshToken) {
+        setRefreshToken(refreshToken);
+      }
+      if (sessionId) {
+        setSessionId(sessionId);
+      }
+
       onSuccess?.(response.data.data);
       return response.data.data;
     } catch (error: any) {
@@ -106,9 +139,19 @@ export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async () =
   try {
     const response = await api.get('api/auth/current-user');
     const accessToken = response.data?.accessToken;
+    const refreshToken = response.data?.refreshToken;
+    const sessionId = response.data?.sessionId;
+
     if (accessToken) {
       setAuthToken(accessToken);
     }
+    if (refreshToken) {
+      setRefreshToken(refreshToken);
+    }
+    if (sessionId) {
+      setSessionId(sessionId);
+    }
+
     return response.data.data;
   } catch (error: any) {
     const errorMessage = getErrorMessage(error);

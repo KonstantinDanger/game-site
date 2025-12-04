@@ -82,7 +82,7 @@ export default function MatchListPage() {
           <Tbody>
             {matchList.map((el: Match) => {
               const { id, matchDate, matchTime, winner, loser } = el;
-              console.log('id', id);
+
               return (
                 <Tr
                   key={id}
@@ -91,8 +91,6 @@ export default function MatchListPage() {
                   _hover={{ bg: hoverBg }}
                   _selected={{ bg: selectedBg }}
                 >
-                  {/* <Td>{name}</Td> */}
-
                   <Td>{new Date(matchDate).toLocaleDateString()}</Td>
                   <Td>{secondsToTime(matchTime)}</Td>
                   <Td>{winner?.name}</Td>

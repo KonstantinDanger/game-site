@@ -24,7 +24,7 @@ export default function Pagination({
 
   useEffect(() => {
     if (!disabled) _setDisabled(false);
-  }, [disabled, page]);
+  }, [disabled, page, perPage]);
 
   const handlePageChange = async (nextPage: number) => {
     if (nextPage === page) return;
@@ -32,7 +32,6 @@ export default function Pagination({
     await sleep(200); // for animation
     window.scrollTo(0, 0);
     onChange({ page: nextPage });
-    _setDisabled(false);
   };
 
   const handlePageSizeChange = async (newPerPage: number) => {

@@ -6,17 +6,24 @@ import type { Player } from '@/types/players';
 import type { Status } from '@/types/reducer';
 import type { Paging } from '@/types/fields';
 import type { ChangePaging } from '@/components/Pagination/Pagination';
+import type { Match } from '@/types/matches';
+
+type PlayerData = {
+  player: Player;
+  totalMatchTime: number;
+  matches: Match[];
+};
 
 type State = {
   playerList: Player[];
-  player: Player | null;
+  playerData: PlayerData | null;
   pagination: Paging;
   status: Status | 'updating';
 };
 
 export const initialState: State = {
   playerList: [],
-  player: null,
+  playerData: null,
   pagination: {
     page: 1,
     perPage: 10,
@@ -56,9 +63,9 @@ const playersSlice = createSlice({
       .addCase(getPlayerById.pending, state => {
         state.status = 'loading';
       })
-      .addCase(getPlayerById.fulfilled, (state, action: PayloadAction<Player>) => {
+      .addCase(getPlayerById.fulfilled, (state, action: PayloadAction<PlayerData>) => {
         state.status = 'loaded';
-        state.player = action.payload;
+        state.playerData = action.payload;
       })
       .addCase(getPlayerById.rejected, state => {
         state.status = 'error';
@@ -72,10 +79,6 @@ const playersSlice = createSlice({
         const index = state.playerList.findIndex(p => p.id === updatedPlayer.id);
         if (index !== -1) {
           state.playerList[index] = updatedPlayer;
-        }
-        // Update current player if it's the same
-        if (state.player?.id === updatedPlayer.id) {
-          state.player = updatedPlayer;
         }
         state.status = 'loaded';
       })

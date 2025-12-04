@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
+  Badge,
   Flex,
   Table,
   Tbody,
@@ -15,7 +16,7 @@ import {
 import Error from '@/components/Error/Error';
 import Loading from '@/components/Loading/Loading';
 import { getPlayerById } from '@/redux/reducers/players';
-import { playersSelector } from '@/redux/selectors';
+import { authSelector, playersSelector } from '@/redux/selectors';
 import { useDispatch, useSelector } from '@/redux/store';
 import { secondsToTime } from '@/utils';
 import type { Match } from '@/types/matches';
@@ -24,7 +25,8 @@ export default function PlayerPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { playerId } = useParams<{ playerId: string }>();
-  const { status, player } = useSelector(playersSelector);
+  const { status, playerData } = useSelector(playersSelector);
+  const { player: currentPlayer } = useSelector(authSelector);
   const hoverBg = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
   const selectedBg = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
 
@@ -34,30 +36,48 @@ export default function PlayerPage() {
     }
   }, [dispatch, playerId]);
 
-  const totalTime = player?.totalMatchTime || 0;
-  const matches = player?.matches || [];
+  const { player: { name } = {}, totalMatchTime = 0, matches = [] } = playerData || {};
 
   return (
     <Flex flexDir='column' gap='24px'>
-      <h1>Player Info{">"} {`${player?.name}`}</h1>
+      {name && (
+        <Flex align='center' gap='16px'>
+          <h1>
+            Player Info {'>'} {`${name}`}
+          </h1>
+
+          {currentPlayer?.isAdmin && (
+            <Badge colorScheme='cyan' fontSize='xs'>
+              Admin
+            </Badge>
+          )}
+
+          {currentPlayer?.id === playerId && (
+            <Badge colorScheme='green' fontSize='xs'>
+              You
+            </Badge>
+          )}
+        </Flex>
+      )}
 
       {['idle', 'loading'].includes(status) ? (
         <Loading />
       ) : status === 'error' ? (
         <Error />
       ) : (
-        player && (
+        playerData && (
           <Flex flexDir='column' gap='24px'>
-
             <Flex gap='8px'>
               <Text fontWeight='600'>Total playtime:</Text>
-              <Text>{secondsToTime(totalTime)}</Text>
+              <Text>{secondsToTime(totalMatchTime)}</Text>
             </Flex>
 
-            <Flex gap='8px'>
-              <Text fontWeight='600'>Total matches played:</Text>
-              <Text>{matches.length}</Text>
-            </Flex>
+            {
+              <Flex gap='8px'>
+                <Text fontWeight='600'>Total matches played:</Text>
+                <Text>{matches.length}</Text>
+              </Flex>
+            }
 
             {matches.length > 0 ? (
               <Flex flexDir='column' gap='16px'>
@@ -93,7 +113,9 @@ export default function PlayerPage() {
                   </Tbody>
                 </Table>
               </Flex>
-            ) : <div>No played matches yet...</div>}
+            ) : (
+              <div>No played matches yet...</div>
+            )}
           </Flex>
         )
       )}
