@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Badge,
-  Button,
   Flex,
   IconButton,
   Table,
@@ -13,7 +12,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-// import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 import type { Player } from '@/types/players';
 import { playersSelector, authSelector } from '@/redux/selectors';
@@ -70,15 +69,14 @@ export default function PlayerListPage() {
         <Table w='100%'>
           <Thead>
             <Tr>
-              <Th>Name</Th>
-              <Th>Played Matches</Th>
+              <Th>Username</Th>
               {isAdmin && <Th>Actions</Th>}
             </Tr>
           </Thead>
 
           <Tbody>
             {playerList.map((el: Player) => {
-              const { name, id, isAdmin: isPlayerAdmin, playedMatchesCount } = el;
+              const { name, id, isAdmin: isPlayerAdmin } = el;
               return (
                 <Tr
                   key={id}
@@ -91,7 +89,7 @@ export default function PlayerListPage() {
                     <Flex align='center' gap='8px'>
                       {name}
                       {isAdmin && isPlayerAdmin && (
-                        <Badge colorScheme='red' fontSize='xs'>
+                        <Badge colorScheme='cyan' fontSize='xs'>
                           Admin
                         </Badge>
                       )}
@@ -102,8 +100,6 @@ export default function PlayerListPage() {
                       )}
                     </Flex>
                   </Td>
-
-                  <Td>{playedMatchesCount ?? 0}</Td>
 
                   {isAdmin && (
                     <Td onClick={e => e.stopPropagation()}>

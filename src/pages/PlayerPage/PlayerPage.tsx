@@ -39,7 +39,7 @@ export default function PlayerPage() {
 
   return (
     <Flex flexDir='column' gap='24px'>
-      <h1>Player Info</h1>
+      <h1>Player Info{">"} {`${player?.name}`}</h1>
 
       {['idle', 'loading'].includes(status) ? (
         <Loading />
@@ -48,13 +48,15 @@ export default function PlayerPage() {
       ) : (
         player && (
           <Flex flexDir='column' gap='24px'>
-            <Flex gap='8px'>
-              <Text fontWeight='600'>{player.name}</Text>
-            </Flex>
 
             <Flex gap='8px'>
               <Text fontWeight='600'>Total playtime:</Text>
               <Text>{secondsToTime(totalTime)}</Text>
+            </Flex>
+
+            <Flex gap='8px'>
+              <Text fontWeight='600'>Total matches played:</Text>
+              <Text>{matches.length}</Text>
             </Flex>
 
             {matches.length > 0 ? (

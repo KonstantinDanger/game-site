@@ -11,7 +11,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-// import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 import EditMatchModal from '@/components/EditMatchModal/EditMatchModal';
 import Pagination from '@/components/Pagination/Pagination';
@@ -82,6 +82,7 @@ export default function MatchListPage() {
           <Tbody>
             {matchList.map((el: Match) => {
               const { id, matchDate, matchTime, winner, loser } = el;
+              console.log('id', id);
               return (
                 <Tr
                   key={id}
@@ -94,8 +95,8 @@ export default function MatchListPage() {
 
                   <Td>{new Date(matchDate).toLocaleDateString()}</Td>
                   <Td>{secondsToTime(matchTime)}</Td>
-                  <Td><Link to={"playerPath"}>{winner?.name}</Link></Td>
-                  <Td><Link to={"playerPath"}>{loser?.name}</Link></Td>
+                  <Td>{winner?.name}</Td>
+                  <Td>{loser?.name}</Td>
 
                   {isAdmin && (
                     <Td onClick={e => e.stopPropagation()}>

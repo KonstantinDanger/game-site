@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import qs from 'qs';
 
 import api from '@/api';
-import { sleep, getErrorMessage } from '@/utils';
+import { getErrorMessage } from '@/utils';
 import type { PlayerUpdateData } from '@/types/players';
 
 export const getPlayerById = createAsyncThunk(
@@ -25,7 +25,6 @@ export const getPlayerList = createAsyncThunk(
   async (_, { getState }: any) => {
     try {
       const { pagination } = getState().players;
-      await sleep(1000); // imitate min query time
       const response = await api.get(`api/players?${qs.stringify(pagination)}`);
       return response.data.data;
     } catch (error: any) {

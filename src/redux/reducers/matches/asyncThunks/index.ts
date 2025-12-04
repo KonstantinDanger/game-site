@@ -25,11 +25,6 @@ export const getMatchList = createAsyncThunk(
     try {
       const { pagination } = getState().matches;
       const response = await api.get(`api/matches?${qs.stringify(pagination)}`);
-      
-      console.log('==============================');
-      console.log('response.data.data', response.data.data);
-      console.log('==============================');
-
       return response.data.data;
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
