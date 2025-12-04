@@ -25,29 +25,30 @@ export default function UserProfilePage() {
         password: '',
         repeatedPwd: '',
       },
-    })
-  }
+    });
+  };
 
   const handleSubmit = (values: RegisterUser, actions: FormikHelpers<RegisterUser>) => {
     const pwd = values.password;
     const repeatedPwd = values.repeatedPwd;
     const name = values.name;
 
-    if (pwd !== repeatedPwd){
-      toast.error("Passwords should match!");
+    if (pwd !== repeatedPwd) {
+      toast.error('Passwords should match!');
       resetForm(actions);
       return;
     }
 
-    if (name == player?.name){
-      toast.error("Username is the same!");
+    if (name == player?.name) {
+      toast.error('Username is the same!');
       return;
     }
 
     dispatch(
       updateUser({
-        data: values, 
-        onSuccess: () => resetForm (actions)}),
+        data: values,
+        onSuccess: () => resetForm(actions),
+      }),
     );
   };
 
@@ -66,16 +67,15 @@ export default function UserProfilePage() {
       >
         {({ dirty }) => (
           <Flex as={Form} flexDir='column' gap='24px' w='320px'>
-
             <label htmlFor={nameFieldId}>New name</label>
             <Input as={Field} name='name' type='input' id={nameFieldId} />
-            
+
             <label htmlFor={pwdFieldName}>Password</label>
             <Input as={Field} name='repeatedPwd' type='password' id={pwdFieldName} />
 
             <label htmlFor={repeatedPwdFieldName}>Repeat password</label>
             <Input as={Field} name='password' type='password' id={repeatedPwdFieldName} />
-            
+
             <Button type='submit' isLoading={isLoading} isDisabled={!dirty}>
               Update Profile
             </Button>

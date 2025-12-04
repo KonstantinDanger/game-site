@@ -21,11 +21,7 @@ type EditMatchModalProps = {
   match: Match | null;
 };
 
-export default function EditMatchModal({
-  isOpen,
-  onClose,
-  match,
-}: EditMatchModalProps) {
+export default function EditMatchModal({ isOpen, onClose, match }: EditMatchModalProps) {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const { status } = useSelector(matchesSelector);
