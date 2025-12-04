@@ -18,7 +18,6 @@ const api = axios.create({
   responseType: 'json',
 });
 
-// Функции для работы с localStorage
 const STORAGE_KEYS = {
   ACCESS_TOKEN: 'accessToken',
   REFRESH_TOKEN: 'refreshToken',
@@ -53,7 +52,6 @@ export const removeAuthToken = () => {
   localStorage.removeItem(STORAGE_KEYS.SESSION_ID);
 };
 
-// Interceptor для добавления заголовков refreshToken и sessionId
 api.interceptors.request.use(
   config => {
     const refreshToken = getRefreshToken();
@@ -64,7 +62,6 @@ api.interceptors.request.use(
       config.headers['X-Session-Id'] = sessionId;
     }
 
-    // Восстанавливаем accessToken из localStorage при инициализации
     const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
     if (accessToken && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -80,7 +77,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   res => res,
   err => {
-    console.log(err.response?.status);
+    if (import.meta.env.MODE === 'development') {
+      console.log(err.response?.status);
+    }
     if (err.response?.status === 401) {
       removeAuthToken();
       store.dispatch(resetAuth());

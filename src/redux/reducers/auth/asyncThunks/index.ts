@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 import { getErrorMessage } from '@/utils';
 
-import type { LoginUser, RegisterUser, UpdateUser } from '@/types/users';
+import type { LoginUser, RegisterUserData, UpdateUser } from '@/types/users';
 import type { ThunkArgs } from '@/types/reducer';
 
 export const logout = createAsyncThunk(
@@ -83,7 +83,7 @@ export const refreshToken = createAsyncThunk('auth/refreshToken', async () => {
 
 export const register = createAsyncThunk(
   'auth/register',
-  async ({ data, onSuccess, onError }: { data: RegisterUser } & ThunkArgs) => {
+  async ({ data, onSuccess, onError }: { data: RegisterUserData } & ThunkArgs) => {
     try {
       const response = await api.post('api/auth/register', data);
 

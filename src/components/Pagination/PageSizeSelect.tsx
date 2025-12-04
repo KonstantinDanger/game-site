@@ -28,7 +28,9 @@ const PageSizeSelect = ({ min = 10, max = 50, step = 5, onChange, value }: Props
   return (
     <Select w='110px' onChange={handleChange} value={value}>
       {options.map(({ label, value }: SelectOption) => (
-        <option value={value}>{label}</option>
+        <option key={value} value={value}>
+          {label}
+        </option>
       ))}
     </Select>
   );

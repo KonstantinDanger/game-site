@@ -67,7 +67,6 @@ const matchesSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(deleteMatch.fulfilled, state => {
-        // List will be refreshed by the thunk
         state.status = 'loaded';
       })
       .addCase(deleteMatch.rejected, state => {

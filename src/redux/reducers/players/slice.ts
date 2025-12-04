@@ -75,7 +75,6 @@ const playersSlice = createSlice({
       })
       .addCase(updatePlayer.fulfilled, (state, action: PayloadAction<Player>) => {
         const updatedPlayer = action.payload;
-        // Update player in list if exists
         const index = state.playerList.findIndex(p => p.id === updatedPlayer.id);
         if (index !== -1) {
           state.playerList[index] = updatedPlayer;
@@ -89,7 +88,6 @@ const playersSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(deletePlayer.fulfilled, state => {
-        // List will be refreshed by the thunk
         state.status = 'loaded';
       })
       .addCase(deletePlayer.rejected, state => {

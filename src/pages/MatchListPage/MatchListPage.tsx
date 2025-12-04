@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   IconButton,
@@ -11,9 +11,8 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { DeleteIcon } from '@chakra-ui/icons';
 
-import EditMatchModal from '@/components/EditMatchModal/EditMatchModal';
 import Pagination from '@/components/Pagination/Pagination';
 import Loading from '@/components/Loading/Loading';
 import Error from '@/components/Error/Error';
@@ -31,7 +30,6 @@ export default function MatchListPage() {
   const navigate = useNavigate();
   const { status, matchList, pagination } = useSelector(matchesSelector);
   const { player: currentPlayer } = useSelector(authSelector);
-  const [editingMatchId, setEditingMatchId] = useState<string | null>(null);
   const hoverBg = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
   const selectedBg = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
   const isAdmin = currentPlayer?.isAdmin === true;
@@ -45,19 +43,12 @@ export default function MatchListPage() {
     dispatch(getMatchList());
   };
 
-  const handleEditClick = (e: React.MouseEvent, matchId: string) => {
-    e.stopPropagation();
-    setEditingMatchId(matchId);
-  };
-
   const handleDeleteClick = async (e: React.MouseEvent, matchId: string) => {
     e.stopPropagation();
     if (window.confirm('Are you sure you want to delete this match?')) {
       await dispatch(deleteMatch(matchId));
     }
   };
-
-  const editingMatch = matchList.find(m => m.id === editingMatchId) || null;
 
   return (
     <Flex flexDir='column' gap='24px'>
@@ -100,13 +91,6 @@ export default function MatchListPage() {
                     <Td onClick={e => e.stopPropagation()}>
                       <Flex gap='8px'>
                         <IconButton
-                          aria-label='Edit match'
-                          icon={<EditIcon />}
-                          size='sm'
-                          onClick={e => handleEditClick(e, id)}
-                        />
-
-                        <IconButton
                           aria-label='Delete match'
                           icon={<DeleteIcon />}
                           size='sm'
@@ -124,12 +108,6 @@ export default function MatchListPage() {
       )}
 
       <Pagination paging={pagination} onChange={onChangePaging} />
-
-      <EditMatchModal
-        isOpen={!!editingMatchId}
-        onClose={() => setEditingMatchId(null)}
-        match={editingMatch}
-      />
     </Flex>
   );
 }

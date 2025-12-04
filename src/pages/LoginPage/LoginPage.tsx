@@ -1,11 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Field, Form, Formik, type FormikHelpers } from 'formik';
-import { Button, Flex, Input, Text } from '@chakra-ui/react';
+import { Form, Formik, type FormikHelpers } from 'formik';
+import { Button, Flex, Text } from '@chakra-ui/react';
 
 import { login } from '@/redux/reducers/auth';
 import { useDispatch, useSelector } from '@/redux/store';
 import { authSelector } from '@/redux/selectors';
-import type { LoginUser } from '@/types/users';
+import type { LoginUser, FormErrors } from '@/types/users';
+import { EMAIL_REGEX } from '@/constants';
+import FormField from '@/components/FormField/FormField';
 import toast from 'react-hot-toast';
 
 export default function LoginPage() {
@@ -35,14 +37,43 @@ export default function LoginPage() {
       <h1>Log In</h1>
 
       <Flex w='320px' flexDir='column' gap='24px'>
-        <Formik initialValues={{ email: '', password: '' }} onSubmit={handleSubmit}>
-          <Flex as={Form} flexDir='column' gap='24px'>
-            <Input as={Field} name='email' type='email' placeholder='Email' />
-            <Input as={Field} name='password' type='password' placeholder='password' />
-            <Button type='submit' isLoading={isLoading}>
-              Log In
-            </Button>
-          </Flex>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          validate={values => {
+            const errors: FormErrors<LoginUser> = {};
+            if (!values.email) {
+              errors.email = 'Email is required';
+            } else if (!EMAIL_REGEX.test(values.email)) {
+              errors.email = 'Invalid email address';
+            }
+            if (!values.password) {
+              errors.password = 'Password is required';
+            }
+            return errors;
+          }}
+          onSubmit={handleSubmit}
+        >
+          {({ errors, touched }) => (
+            <Flex as={Form} flexDir='column' gap='24px'>
+              <FormField
+                name='email'
+                type='email'
+                placeholder='Email'
+                error={errors.email}
+                touched={touched.email}
+              />
+              <FormField
+                name='password'
+                type='password'
+                placeholder='Password'
+                error={errors.password}
+                touched={touched.password}
+              />
+              <Button type='submit' isLoading={isLoading}>
+                Log In
+              </Button>
+            </Flex>
+          )}
         </Formik>
 
         <Flex justifyContent='center' gap='8px'>

@@ -1,10 +1,11 @@
 import { Field, Form, Formik, type FormikHelpers } from 'formik';
-import { Button, Flex, Input } from '@chakra-ui/react';
+import { Button, Flex, Input, Text } from '@chakra-ui/react';
 
 import { updateUser } from '@/redux/reducers/auth';
 import { useDispatch, useSelector } from '@/redux/store';
 import { authSelector } from '@/redux/selectors';
-import type { RegisterUser } from '@/types/users';
+import type { RegisterUser, FormErrors } from '@/types/users';
+import { validatePassword } from '@/constants';
 import { useId } from 'react';
 import toast from 'react-hot-toast';
 
@@ -29,24 +30,18 @@ export default function UserProfilePage() {
   };
 
   const handleSubmit = (values: RegisterUser, actions: FormikHelpers<RegisterUser>) => {
-    const pwd = values.password;
-    const repeatedPwd = values.repeatedPwd;
     const name = values.name;
-
-    if (pwd !== repeatedPwd) {
-      toast.error('Passwords should match!');
-      resetForm(actions);
-      return;
-    }
 
     if (name == player?.name) {
       toast.error('Username is the same!');
       return;
     }
 
+    const { repeatedPwd, ...data } = values;
+
     dispatch(
       updateUser({
-        data: values,
+        data,
         onSuccess: () => resetForm(actions),
       }),
     );
@@ -63,18 +58,56 @@ export default function UserProfilePage() {
           password: '',
           repeatedPwd: '',
         }}
+        validate={values => {
+          const errors: FormErrors<RegisterUser> = {};
+          if (values.password) {
+            const passwordError = validatePassword(values.password);
+            if (passwordError) {
+              errors.password = passwordError;
+            }
+          }
+          if (values.password && !values.repeatedPwd) {
+            errors.repeatedPwd = 'Please confirm your password';
+          }
+          if (values.repeatedPwd && !values.password) {
+            errors.password = 'Password is required';
+          }
+          if (
+            values.password &&
+            values.repeatedPwd &&
+            values.password !== values.repeatedPwd
+          ) {
+            errors.repeatedPwd = 'Passwords must match';
+          }
+          return errors;
+        }}
         onSubmit={handleSubmit}
       >
-        {({ dirty }) => (
+        {({ dirty, errors, touched }) => (
           <Flex as={Form} flexDir='column' gap='24px' w='320px'>
             <label htmlFor={nameFieldId}>New name</label>
             <Input as={Field} name='name' type='input' id={nameFieldId} />
 
             <label htmlFor={pwdFieldName}>Password</label>
-            <Input as={Field} name='repeatedPwd' type='password' id={pwdFieldName} />
+            <Input as={Field} name='password' type='password' id={pwdFieldName} />
+            {errors.password && touched.password && (
+              <Text color='red.500' fontSize='sm'>
+                {errors.password}
+              </Text>
+            )}
 
             <label htmlFor={repeatedPwdFieldName}>Repeat password</label>
-            <Input as={Field} name='password' type='password' id={repeatedPwdFieldName} />
+            <Input
+              as={Field}
+              name='repeatedPwd'
+              type='password'
+              id={repeatedPwdFieldName}
+            />
+            {errors.repeatedPwd && touched.repeatedPwd && (
+              <Text color='red.500' fontSize='sm'>
+                {errors.repeatedPwd}
+              </Text>
+            )}
 
             <Button type='submit' isLoading={isLoading} isDisabled={!dirty}>
               Update Profile
