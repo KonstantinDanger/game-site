@@ -3,6 +3,7 @@ import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { Toaster } from 'react-hot-toast';
 import { getCurrentUser } from '@/redux/reducers/auth/asyncThunks';
 import { useDispatch } from '@/redux/store';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
@@ -23,6 +24,8 @@ function App() {
       <Header />
       <Body />
       <Footer />
+
+      <SpeedInsights />
     </ChakraProvider>
   );
 }
