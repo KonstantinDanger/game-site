@@ -1,181 +1,180 @@
-# Варианты хранения токенов без localStorage
+# Варіанти зберігання токенів без localStorage
 
 ## Проблема
-- `localStorage` уязвим к XSS-атакам
-- Cookies с `httpOnly` не работают при разных хостах (CORS) без правильной настройки
-- Нужно найти баланс между безопасностью и удобством использования
+- `localStorage` вразливий до XSS-атаків
+- Cookies з `httpOnly` не працюють при різних хостах (CORS) без правильного налаштування
+- Потрібно знайти баланс між безпекою та зручністю використання
 
-## Варианты решения
+## Варіанти рішення
 
-### 1. ✅ **SessionStorage (рекомендуется для начала)**
-**Безопасность:** Средняя (лучше, чем localStorage)
-**Удобство:** Высокое
-**CORS:** Работает везде
+### 1. ✅ **SessionStorage (рекомендується для початку)**
+**Безпека:** Середня (краще, ніж localStorage)
+**Зручність:** Висока
+**CORS:** Працює скрізь
 
-**Преимущества:**
-- Автоматически очищается при закрытии вкладки
-- Меньше риск утечки при XSS (данные не сохраняются между сессиями)
-- Работает при разных хостах без настройки
-- Простая миграция с localStorage
+**Переваги:**
+- Автоматично очищається при закритті вкладки
+- Менше ризик витоку при XSS (дані не зберігаються між сесіями)
+- Працює при різних хостах без налаштування
+- Проста міграція з localStorage
 
-**Недостатки:**
-- Все еще уязвим к XSS (но меньше риск)
-- Токены теряются при закрытии вкладки
+**Недоліки:**
+- Все ще вразливий до XSS (але менший ризик)
+- Токени губляться при закритті вкладки
 
-**Реализация:**
+**Реалізація:**
 ```typescript
-// Просто заменить localStorage на sessionStorage
+// Просто замінити localStorage на sessionStorage
 sessionStorage.setItem('accessToken', token);
 sessionStorage.getItem('accessToken');
-```
+````
 
 ---
 
-### 2. ✅ **In-Memory Storage (Redux State) - самый безопасный**
-**Безопасность:** Высокая
-**Удобство:** Среднее (требует повторной авторизации при перезагрузке)
-**CORS:** Работает везде
+### 2. ✅ **In-Memory Storage (Redux State) - найбезпечніший**
+**Безпека:** Висока
+**Зручність:** Середня (вимагає повторної авторизації при перезавантаженні)
+**CORS:** Працює скрізь
 
-**Преимущества:**
-- Токены не сохраняются на диске
-- Недоступны для XSS-скриптов
-- Автоматически очищаются при закрытии вкладки
+**Переваги:**
+- Токени не зберігаються на диску
+- Недоступні для XSS-скриптів
+- Автоматично очищаються при закритті вкладки
 
-**Недостатки:**
-- Токены теряются при перезагрузке страницы
-- Требует повторной авторизации после refresh
-- Нужно хранить refresh token отдельно (в sessionStorage или cookie)
+**Недоліки:**
+- Токени губляться при перезавантаженні сторінки
+- Вимагає повторної авторизації після refresh
+- Потрібно зберігати refresh token окремо (у sessionStorage або cookie)
 
-**Реализация:**
+**Реалізація:**
 ```typescript
-// Хранить access token только в Redux
-// Refresh token в sessionStorage для восстановления сессии
-```
+// Зберігати access token тільки у Redux
+// Refresh token у sessionStorage для відновлення сесії
+````
 
 ---
 
-### 3. ✅ **Гибридный подход (лучший баланс)**
-**Безопасность:** Высокая
-**Удобство:** Высокое
-**CORS:** Работает везде
+### 3. ✅ **Гібридний підхід (кращий баланс)**
+**Безпека:** Висока
+**Зручність:** Висока
+**CORS:** Працює скрізь
 
-**Стратегия:**
-- **Access Token** → в памяти (Redux state) или sessionStorage
-- **Refresh Token** → в httpOnly cookie (если бэкенд поддерживает) или sessionStorage
-- При перезагрузке страницы использовать refresh token для получения нового access token
+**Стратегія:**
+- **Access Token** → у пам'яті (Redux state) або sessionStorage
+- **Refresh Token** → в httpOnly cookie (якщо бекенд підтримує) або sessionStorage
+- При перезавантаженні сторінки використовувати refresh token для отримання нового access token
 
-**Преимущества:**
-- Access token не сохраняется на диске
-- Refresh token можно безопасно хранить
-- Автоматическое восстановление сессии
+**Переваги:**
+- Access token не зберігається на диску
+- Refresh token можна безпечно зберігати
+- Автоматичне відновлення сесії
 
 ---
 
-### 4. ⚠️ **HttpOnly Cookies (требует настройки бэкенда)**
-**Безопасность:** Очень высокая
-**Удобство:** Высокое
-**CORS:** Требует правильной настройки
+### 4. ⚠️ **HttpOnly Cookies (вимагає налаштування бекенду)**
+**Безпека:** Дуже висока
+**Зручність:** Висока
+**CORS:** Вимагає правильного налаштування
 
-**Важно:** Cookies **МОГУТ** работать при разных хостах, если правильно настроить CORS!
+**Важливо:** Cookies **МОЖУТЬ** працювати при різних хостах, якщо правильно налаштувати CORS!
 
-**Требования на бэкенде:**
+**Вимоги на бекенді:**
 ```javascript
-// Пример для Express.js
-app.use(cors({
-  origin: 'https://your-frontend-domain.com',
-  credentials: true, // ВАЖНО!
-  allowedHeaders: ['Content-Type', 'Authorization']
+// Приклад для Express.js
+app.use(cors({ 
+origin: 'https://your-frontend-domain.com', 
+credentials: true, // ВАЖЛИВО! 
+дозволеніГедери: ['Content-Type', 'Authorization']
 }));
 
-// При установке cookie
-res.cookie('refreshToken', token, {
-  httpOnly: true,
-  secure: true, // только HTTPS
-  sameSite: 'none', // для cross-origin
-  domain: '.your-domain.com' // если нужно
+// При установці cookie
+res.cookie('refreshToken', token, { 
+httpOnly: true, 
+secure: true, // тільки HTTPS 
+sameSite: 'none', // для cross-origin 
+domain: '.your-domain.com' // якщо потрібно
 });
-```
+````
 
-**На фронтенде:**
+**На фронтенді:**
 ```typescript
-// axios должен отправлять credentials
+// axios повинен відправляти credentials
 axios.defaults.withCredentials = true;
-```
+````
 
-**Преимущества:**
-- HttpOnly cookies недоступны для JavaScript (защита от XSS)
-- Автоматически отправляются с запросами
-- Работает при правильной настройке CORS
+**Переваги:**
+- HttpOnly cookies недоступні для JavaScript (захист від XSS)
+- Автоматично відправляються із запитами
+- Працює при правильному налаштуванні CORS
 
-**Недостатки:**
-- Требует изменений на бэкенде
-- Нужна правильная настройка CORS
-- Может быть сложнее для отладки
-
----
-
-## 🎯 Рекомендации по реализации
-
-### Вариант A: Быстрая миграция (SessionStorage)
-1. Заменить `localStorage` на `sessionStorage`
-2. Минимальные изменения кода
-3. Улучшение безопасности без больших изменений
-
-### Вариант B: Оптимальный (Гибридный)
-1. Access token в Redux state (память)
-2. Refresh token в sessionStorage
-3. При перезагрузке страницы автоматически обновлять access token через refresh token
-4. Лучший баланс безопасности и UX
-
-### Вариант C: Максимальная безопасность (HttpOnly Cookies)
-1. Настроить CORS на бэкенде с `credentials: true`
-2. Использовать httpOnly cookies для refresh token
-3. Access token в памяти (Redux)
-4. Требует координации с бэкенд-командой
+**Недоліки:**
+- Вимагає змін на бекенді
+- Потрібне правильне налаштування CORS
+- Може бути складніше для налагодження
 
 ---
 
-## 📝 Пример реализации гибридного подхода
+## 🎯 Рекомендації щодо реалізації
+
+### Варіант A: Швидка міграція (SessionStorage)
+1. Замінити `localStorage` на `sessionStorage`
+2. Мінімальні зміни коду
+3. Поліпшення безпеки без великих змін
+
+### Варіант B: Оптимальний (Гібридний)
+1. Access token у Redux state (пам'ять)
+2. Refresh token у sessionStorage
+3. При перезавантаженні сторінки автоматично оновлювати access token через refresh token
+4. Кращий баланс безпеки та UX
+
+### Варіант C: Максимальна безпека (HttpOnly Cookies)
+1. Налаштувати CORS на бекенді з `credentials: true`
+2. Використовувати httpOnly cookies для refresh token
+3. Access token у пам'яті (Redux)
+4. Вимагає координації з бекенд-командою
+
+---
+
+## 📝 Приклад реалізації гібридного підходу
 
 ```typescript
-// api/tokenStorage.ts
-class TokenStorage {
-  private accessToken: string | null = null;
-  
-  setAccessToken(token: string) {
-    this.accessToken = token;
-    // НЕ сохраняем в localStorage/sessionStorage
-  }
-  
-  getAccessToken(): string | null {
-    return this.accessToken;
-  }
-  
-  setRefreshToken(token: string) {
-    // Refresh token можно в sessionStorage для восстановления сессии
-    sessionStorage.setItem('refreshToken', token);
-  }
-  
-  getRefreshToken(): string | null {
-    return sessionStorage.getItem('refreshToken');
-  }
-  
-  clear() {
-    this.accessToken = null;
-    sessionStorage.removeItem('refreshToken');
-  }
+//api/tokenStorage.ts
+class TokenStorage { 
+private accessToken: string | null = null; 
+
+setAccessToken(token: string) { 
+this.accessToken = token; 
+// НЕ зберігаємо в localStorage/sessionStorage 
+} 
+
+getAccessToken(): string | null { 
+return this.accessToken; 
+} 
+
+setRefreshToken(token: string) { 
+// Refresh token можна у sessionStorage для відновлення сесії 
+sessionStorage.setItem('refreshToken', token); 
+} 
+
+getRefreshToken(): string | null { 
+return sessionStorage.getItem('refreshToken'); 
+} 
+
+clear() { 
+this.accessToken = null; 
+sessionStorage.removeItem('refreshToken'); 
+}
 }
 
-export const tokenStorage = new TokenStorage();
-```
+export const tokenStorage = новий TokenStorage();
+````
 
 ---
 
-## 🔒 Дополнительные меры безопасности
+## 🔒 Додаткові заходи безпеки
 
-1. **Короткий срок жизни access token** (15-30 минут)
-2. **Автоматический refresh** перед истечением срока
-3. **Content Security Policy (CSP)** для защиты от XSS
-4. **HTTPS только** в production
-5. **Rate limiting** на бэкенде для защиты от брутфорса
-
+1. **Короткий термін життя access token** (15-30 хвилин)
+2. **Автоматичний refresh** перед закінченням терміну
+3. **Content Security Policy (CSP)** для захисту від XSS
+4. **HTTPS тільки** у production
+5. **Rate limiting** на бекенді для захисту від брутфорсу
